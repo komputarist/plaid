@@ -15,17 +15,23 @@
  *
  */
 
-package io.plaidapp.core.data.api.dribbble.model;
+package io.plaidapp.core.dribbble.data.api.model
 
-public class AccessToken {
+import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
-    public final String access_token;
-    public final String token_type;
-    public final String scope;
+/**
+ * Models a dribbble user
+ */
+@Parcelize
+data class User(
+    @SerializedName("id") val id: Long,
+    @SerializedName("name") val name: String,
+    @SerializedName("username") val username: String,
+    @SerializedName("avatar_url") val avatarUrl: String?
+    ) : Parcelable {
 
-    public AccessToken(String access_token, String token_type, String scope) {
-        this.access_token = access_token;
-        this.token_type = token_type;
-        this.scope = scope;
-    }
+    val highQualityAvatarUrl: String?
+        get() = avatarUrl?.replace("/normal/", "/original/")
 }

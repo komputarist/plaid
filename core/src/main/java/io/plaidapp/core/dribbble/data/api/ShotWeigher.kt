@@ -15,17 +15,22 @@
  *
  */
 
-package io.plaidapp.core.data.api.dribbble.model;
+package io.plaidapp.core.dribbble.data.api
 
-import java.util.Date;
+import io.plaidapp.core.data.PlaidItemSorting
+import io.plaidapp.core.dribbble.data.api.model.Shot
 
 /**
- * An interface for model items that can be displayed as a list of players.
+ * Utility class for applying weights to a group of [Shot]s for sorting. Weighs shots relative
+ * to the most liked shot in the group.
  */
-public interface PlayerListable {
+class ShotWeigher : PlaidItemSorting.PlaidItemGroupWeigher<Shot> {
 
-    User getPlayer();
-    long getId();
-    Date getDateCreated();
-
+    override fun weigh(shots: List<Shot>) {
+        val maxLikes = shots.maxBy { it.likesCount }?.likesCount?.toFloat() ?: 0f
+        shots.forEach { shot ->
+            val weight = 1f - shot.likesCount.toFloat() / maxLikes
+            shot.weight = shot.page + weight
+        }
+    }
 }
